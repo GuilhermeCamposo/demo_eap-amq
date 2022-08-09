@@ -26,7 +26,6 @@
         <extension module="org.wildfly.extension.batch.jberet"/>
         <extension module="org.wildfly.extension.bean-validation"/>
         <extension module="org.wildfly.extension.clustering.web"/>
-        <extension module="org.wildfly.extension.core-management"/>
         <extension module="org.wildfly.extension.discovery"/>
         <extension module="org.wildfly.extension.ee-security"/>
         <extension module="org.wildfly.extension.elytron"/>
@@ -148,7 +147,6 @@
             </thread-pool>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
-        <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:6.0">
             <datasources>
                 <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true" statistics-enabled="${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}">
@@ -480,14 +478,6 @@
                     <authorization>
                         <policy-module code="Delegating" flag="required"/>
                     </authorization>
-                </security-domain>
-                <security-domain name="jaspitest" cache-type="default">
-                    <authentication-jaspi>
-                        <login-module-stack name="dummy">
-                            <login-module code="Dummy" flag="optional"/>
-                        </login-module-stack>
-                        <auth-module code="Dummy"/>
-                    </authentication-jaspi>
                 </security-domain>
                 <security-domain name="jboss-ejb-policy" cache-type="default">
                     <authorization>
