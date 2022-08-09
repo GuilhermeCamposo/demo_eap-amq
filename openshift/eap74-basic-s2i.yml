@@ -223,13 +223,13 @@ objects:
             value: 'true'
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #     - /bin/bash
-          #     - -c
-          #     - /opt/eap/bin/livenessProbe.sh
-          #   initialDelaySeconds: 60
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/livenessProbe.sh
+            initialDelaySeconds: 60
           name: ${APPLICATION_NAME}
           ports:
           - containerPort: 8778
@@ -241,13 +241,13 @@ objects:
           - containerPort: 8888
             name: ping
             protocol: TCP
-          # readinessProbe:
-          #   exec:
-          #     command:
-          #     - /bin/bash
-          #     - -c
-          #     - /opt/eap/bin/readinessProbe.sh
-          #   initialDelaySeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/readinessProbe.sh
+            initialDelaySeconds: 10
           resources:
             limits:
               memory: ${MEMORY_LIMIT}
