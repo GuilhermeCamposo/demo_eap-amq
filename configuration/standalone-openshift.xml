@@ -441,6 +441,7 @@
         <subsystem xmlns="urn:jboss:domain:messaging-activemq:13.0">
             <remote-connector name="netty-remote-throughput" socket-binding="messaging-remote-throughput"/>
             <pooled-connection-factory name="activemq-ra-remote" entries="java:/RemoteJmsXA java:jboss/RemoteJmsXA" connectors="netty-remote-throughput" transaction="xa"/>
+            <pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="netty-remote-throughput" transaction="xa"/>
         </subsystem>
         <subsystem xmlns="urn:wildfly:metrics:1.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:jboss}"/>
         <subsystem xmlns="urn:jboss:domain:naming:2.0">
