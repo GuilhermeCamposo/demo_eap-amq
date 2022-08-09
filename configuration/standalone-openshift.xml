@@ -449,7 +449,7 @@
                 <external-context name="java:global/remoteContext" module="org.apache.activemq.artemis" class="javax.naming.InitialContext">
                     <environment>
                         <property name="java.naming.factory.initial" value="org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"/>
-                        <property name="java.naming.provider.url" value="tcp://ex-aao-core-0-svc:61616"/>
+                        <property name="java.naming.provider.url" value="tcp://amq-core-0-svc:61616"/>
                         <property name="queue.MyQueue" value="jms.queue.MyQueue"/>
                     </environment>
                 </external-context>
@@ -568,7 +568,7 @@
             <remote-destination host="${jboss.mail.server.host:localhost}" port="${jboss.mail.server.port:25}"/>
         </outbound-socket-binding>
         <outbound-socket-binding name="messaging-remote-throughput">
-            <remote-destination host="ex-aao-core-0-svc" port="61616"/>
+            <remote-destination host="amq-core-0-svc" port="61616"/>
         </outbound-socket-binding>
         <outbound-socket-binding name="remote-server">
             <remote-destination host="localhost" port="61616"/>

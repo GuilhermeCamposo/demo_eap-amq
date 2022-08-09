@@ -12,17 +12,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @JMSDestinationDefinitions(
-        value = {
-                @JMSDestinationDefinition(
-                        name = "java:/queue/MyQueue",
-                        interfaceName = "javax.jms.Queue",
-                        destinationName = "MyQueue",
-                        resourceAdapter = "activemq-ra-remote"
-                )
-        }
+    value = {
+            @JMSDestinationDefinition(
+                    name = "java:/queue/MyQueue",
+                    interfaceName = "javax.jms.Queue",
+                    destinationName = "MyQueue",
+                    resourceAdapter = "activemq-ra-remote"
+                    )
+    }
 )
 
-@WebServlet("/HelloWorldMDBServletClient")
+@WebServlet("/HelloWorld")
 public class DemoServlet extends HttpServlet {
 
     private static final int MSG_COUNT = 5;

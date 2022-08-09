@@ -1,0 +1,33 @@
+apiVersion: broker.amq.io/v1beta1
+kind: ActiveMQArtemis
+metadata:
+  name: amq
+  namespace: eap-amq
+spec:
+  acceptors:
+    - enabledProtocols: amqp
+      name: amqp
+      port: 5672
+    - enabledProtocols: core
+      name: core
+      port: 61616
+  addressSettings: {}
+  adminPassword: admin
+  adminUser: admin
+  console:
+    expose: true
+  deploymentPlan:
+    size: 1
+    podSecurity: {}
+    resources: {}
+    readinessProbe: {}
+    messageMigration: false
+    extraMounts: {}
+    managementRBACEnabled: true
+    livenessProbe: {}
+    journalType: nio
+    image: placeholder
+    storage: {}
+  upgrades:
+    enabled: false
+    minor: false

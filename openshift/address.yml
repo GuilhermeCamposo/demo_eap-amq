@@ -1,0 +1,9 @@
+apiVersion: broker.amq.io/v1beta1
+kind: ActiveMQArtemisAddress
+metadata:
+  name: my-queue
+  namespace: eap-amq
+spec:
+  addressName: jms.queue.MyQueue
+  queueName: jms.queue.MyQueue
+  routingType: anycast

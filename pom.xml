@@ -69,7 +69,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- importing the jakartaee8-with-tools BOM adds specs and other useful artifacts as managed dependencies -->
             <dependency>
                 <groupId>org.jboss.bom</groupId>
                 <artifactId>jboss-eap-jakartaee8-with-tools</artifactId>
@@ -81,6 +80,7 @@
     </dependencyManagement>
 
     <dependencies>
+
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
