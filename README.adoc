@@ -2,7 +2,6 @@
 
 Demonstration on how to deploy EAP using s2i and connect to an external AMQ instance.
 
-
 === Create the namespace used in the demo
 ----
 oc new-project eap-amq
@@ -11,7 +10,8 @@ oc new-project eap-amq
 === Install the AMQ Broker operator
 
 ----
-TBD
+oc create -f openshift/operator-group.yml
+oc create -f openshift/operator.yml
 ----
 
 === Create the AMQ Broker operator resources
@@ -26,17 +26,19 @@ oc create -f openshift/address.yml
 === Deploy the Application
 
 ----
-oc new-app --template=eap74-basic-s2i \
+oc process -f openshift/eap74-basic-s2i.yml \
  -p EAP_IMAGE_NAME=jboss-eap74-openjdk11-openshift:7.4.0 \
  -p EAP_RUNTIME_IMAGE_NAME=jboss-eap74-openjdk11-runtime-openshift:7.4.0 \
  -p SOURCE_REPOSITORY_URL="https://github.com/GuilhermeCamposo/demo_eap-amq.git" \
- -p SOURCE_REPOSITORY_REF="main"
-----
-
-=== Fix the generated DeploymentConfig
-
-----
-oc set env DISABLE_EMBEDDED_JMS_BROKER=true
+ -p SOURCE_REPOSITORY_REF="main" | oc create -f -
 ----
 
 === Testing the Application
+
+Paste the following result in your browser
+----
+EAP_HOST=$(oc get route eap-app -o jsonpath='{.spec.host}')
+echo "http://$EAP_HOST/HelloWorld"
+----
+
+Check the applications logs to verify if the MDB is consuming the messages.
