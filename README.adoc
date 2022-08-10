@@ -2,6 +2,8 @@
 
 Demonstration on how to deploy EAP using s2i and connect to an external AMQ instance.
 
+== Deploying on OpenShift
+
 === Create the namespace used in the demo
 ----
 oc new-project eap-amq
@@ -42,3 +44,14 @@ echo "http://$EAP_HOST/HelloWorld"
 ----
 
 Check the applications logs to verify if the MDB is consuming the messages.
+
+
+== Deploying Local
+
+* Run your EAP instance using the link:configuration/standalone-openshift.yml[standalone-openshift.yml]. *Don't forget to substitute the host address for your AMQ Broker instance*.
+
+* This Java project is using `wildfly-maven-plugin`. If you have a JBoss EAP running in the same host, you may use it to deploy the application to EAP:
+
+----
+mvn clean package wildfly:deploy -Plocal
+----

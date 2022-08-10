@@ -1,0 +1,318 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: "2022-08-10T15:46:47Z"
+  generation: 1
+  labels:
+    ActiveMQArtemis: amq
+    application: amq-app
+    com.company: Red_Hat
+    rht.comp: Broker_AMQ
+    rht.comp_ver: 7.10.0
+    rht.prod_name: Red_Hat_Integration
+    rht.prod_ver: 2022.Q2
+    rht.subcomp: broker-amq
+    rht.subcomp_t: application
+  name: amq-ss
+  namespace: eap-amq
+  ownerReferences:
+  - apiVersion: broker.amq.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ActiveMQArtemis
+    name: amq
+    uid: d50171b4-5d6c-437c-aece-9c6b449158d9
+  resourceVersion: "61757"
+  uid: c14746bc-811f-45c1-a04d-3b3bba00b4c7
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      ActiveMQArtemis: amq
+      application: amq-app
+      com.company: Red_Hat
+      rht.comp: Broker_AMQ
+      rht.comp_ver: 7.10.0
+      rht.prod_name: Red_Hat_Integration
+      rht.prod_ver: 2022.Q2
+      rht.subcomp: broker-amq
+      rht.subcomp_t: application
+  serviceName: amq-hdls-svc
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        ActiveMQArtemis: amq
+        application: amq-app
+        com.company: Red_Hat
+        rht.comp: Broker_AMQ
+        rht.comp_ver: 7.10.0
+        rht.prod_name: Red_Hat_Integration
+        rht.prod_ver: 2022.Q2
+        rht.subcomp: broker-amq
+        rht.subcomp_t: application
+      name: amq
+      namespace: eap-amq
+    spec:
+      affinity: {}
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - export STATEFUL_SET_ORDINAL=${HOSTNAME##*-};exec /opt/amq/bin/launch.sh
+        - start
+        env:
+        - name: AMQ_ACCEPTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_ACCEPTORS
+              name: amq-netty-secret
+        - name: AMQ_ADDRESSES
+        - name: AMQ_ANYCAST_PREFIX
+        - name: AMQ_CLUSTERED
+          value: "true"
+        - name: AMQ_CLUSTER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_PASSWORD
+              name: amq-credentials-secret
+        - name: AMQ_CLUSTER_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_USER
+              name: amq-credentials-secret
+        - name: AMQ_CONNECTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CONNECTORS
+              name: amq-netty-secret
+        - name: AMQ_DATA_DIR
+          value: /opt/amq/data
+        - name: AMQ_DATA_DIR_LOGGING
+          value: "true"
+        - name: AMQ_ENABLE_JOLOKIA_AGENT
+          value: "false"
+        - name: AMQ_ENABLE_MANAGEMENT_RBAC
+          value: "true"
+        - name: AMQ_ENABLE_METRICS_PLUGIN
+          value: "false"
+        - name: AMQ_EXTRA_ARGS
+          value: --no-autotune
+        - name: AMQ_GLOBAL_MAX_SIZE
+          value: 100 mb
+        - name: AMQ_JOURNAL_TYPE
+          value: nio
+        - name: AMQ_MULTICAST_PREFIX
+        - name: AMQ_NAME
+          value: amq-broker
+        - name: AMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_PASSWORD
+              name: amq-credentials-secret
+        - name: AMQ_QUEUES
+        - name: AMQ_REQUIRE_LOGIN
+          value: "false"
+        - name: AMQ_ROLE
+          value: admin
+        - name: AMQ_TRANSPORTS
+        - name: AMQ_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_USER
+              name: amq-credentials-secret
+        - name: CONFIG_BROKER
+          value: "false"
+        - name: CONFIG_INSTANCE_DIR
+          value: /amq/init/config
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "7800"
+        - name: PING_SVC_NAME
+          value: amq-ping-svc
+        - name: POD_NAMESPACE
+        - name: TRIGGERED_ROLL_COUNT
+          value: "77869637"
+        image: registry.redhat.io/amq7/amq-broker-rhel8@sha256:3c00b524722b500ff0922fe7a8722868557512183a8f69248f37a68c45c6a770
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8161
+          timeoutSeconds: 1
+        name: amq-container
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/amq/bin/readinessProbe.sh
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/amq/data
+          name: amq
+        - mountPath: /amq/extra/configmaps/amq-props-00000001
+          name: configmap-amq-props-00000001
+          readOnly: true
+        - mountPath: /amq/init/config
+          name: amq-cfg-dir
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - args:
+        - -c
+        - /opt/amq/bin/launch.sh && /opt/amq-broker/script/default.sh
+        command:
+        - /bin/bash
+        env:
+        - name: AMQ_ACCEPTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_ACCEPTORS
+              name: amq-netty-secret
+        - name: AMQ_ADDRESSES
+        - name: AMQ_ANYCAST_PREFIX
+        - name: AMQ_CLUSTERED
+          value: "true"
+        - name: AMQ_CLUSTER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_PASSWORD
+              name: amq-credentials-secret
+        - name: AMQ_CLUSTER_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CLUSTER_USER
+              name: amq-credentials-secret
+        - name: AMQ_CONNECTORS
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_CONNECTORS
+              name: amq-netty-secret
+        - name: AMQ_DATA_DIR
+          value: /opt/amq/data
+        - name: AMQ_DATA_DIR_LOGGING
+          value: "true"
+        - name: AMQ_ENABLE_JOLOKIA_AGENT
+          value: "false"
+        - name: AMQ_ENABLE_MANAGEMENT_RBAC
+          value: "true"
+        - name: AMQ_ENABLE_METRICS_PLUGIN
+          value: "false"
+        - name: AMQ_EXTRA_ARGS
+          value: --no-autotune
+        - name: AMQ_GLOBAL_MAX_SIZE
+          value: 100 mb
+        - name: AMQ_JOURNAL_TYPE
+          value: nio
+        - name: AMQ_MULTICAST_PREFIX
+        - name: AMQ_NAME
+          value: amq-broker
+        - name: AMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_PASSWORD
+              name: amq-credentials-secret
+        - name: AMQ_QUEUES
+        - name: AMQ_REQUIRE_LOGIN
+          value: "false"
+        - name: AMQ_ROLE
+          value: admin
+        - name: AMQ_TRANSPORTS
+        - name: AMQ_USER
+          valueFrom:
+            secretKeyRef:
+              key: AMQ_USER
+              name: amq-credentials-secret
+        - name: CONFIG_INSTANCE_DIR
+          value: /amq/init/config
+        - name: JAVA_OPTS
+          value: -Dbroker.properties=/amq/extra/configmaps/amq-props-00000001/broker.properties
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "7800"
+        - name: PING_SVC_NAME
+          value: amq-ping-svc
+        - name: POD_NAMESPACE
+        - name: RUN_BROKER
+          value: "false"
+        - name: TRIGGERED_ROLL_COUNT
+          value: "0"
+        image: registry.redhat.io/amq7/amq-broker-init-rhel8@sha256:b575d6eebf44dc9049445e357488efb17a690953852419b534df30e0105b9ca4
+        imagePullPolicy: IfNotPresent
+        name: amq-container-init
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /amq/init/config
+          name: amq-cfg-dir
+        - mountPath: /init_cfg_root
+          name: tool-dir
+        - mountPath: /amq/extra/configmaps/amq-props-00000001
+          name: configmap-amq-props-00000001
+          readOnly: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: amq
+        persistentVolumeClaim:
+          claimName: amq
+      - configMap:
+          defaultMode: 420
+          name: amq-props-00000001
+        name: configmap-amq-props-00000001
+      - emptyDir: {}
+        name: amq-cfg-dir
+      - emptyDir: {}
+        name: tool-dir
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        ActiveMQArtemis: amq
+        application: amq-app
+        com.company: Red_Hat
+        rht.comp: Broker_AMQ
+        rht.comp_ver: 7.10.0
+        rht.prod_name: Red_Hat_Integration
+        rht.prod_ver: 2022.Q2
+        rht.subcomp: broker-amq
+        rht.subcomp_t: application
+      name: amq
+      namespace: eap-amq
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: gp2
+      volumeMode: Filesystem
+    status:
+      phase: Pending
+status:
+  availableReplicas: 1
+  collisionCount: 0
+  currentReplicas: 1
+  currentRevision: amq-ss-6c89cbc6cb
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updateRevision: amq-ss-6c89cbc6cb
+  updatedReplicas: 1
