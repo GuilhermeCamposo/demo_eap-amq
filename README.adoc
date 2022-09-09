@@ -48,7 +48,7 @@ Check the applications logs to verify if the MDB is consuming the messages.
 
 == Deploying Local
 
-* Run your EAP instance using the link:configuration/standalone-openshift.yml[standalone-openshift.yml]. *Don't forget to substitute the host address for your AMQ Broker instance*.
+* Run your EAP instance using the link:https://github.com/GuilhermeCamposo/demo_eap-amq/blob/main/configuration/standalone-openshift.xml[standalone-openshift.yml]. *Don't forget to substitute the host address for your AMQ Broker instance*.
 
 * This Java project is using `wildfly-maven-plugin`. If you have a JBoss EAP running in the same host, you may use it to deploy the application to EAP:
 
